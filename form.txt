@@ -1,0 +1,17 @@
+//      Update form to figure out
+//                <form id="cartForm"
+//                    onSubmit={handleCart}
+//                    name="cartForm"
+//                    action="/maker"
+//                    method="POST"
+//                    className="cartForm"
+//                >
+//                    <input className="cartUsage" type="text" name="usage" placeholder={cart.usage}> 
+//                    <input className="cartWorking" type="text" name="working" placeholder={cart.working}>
+//                    <input className="cartUser" type="text" name="user" placeholder={cart.lastUser}>
+//                    <input className="cartRefuel" type="text" name="refuel" placeholder={cart.lastReFuel}>
+//                    <input className="cartNotes" type="text" name="notes" placeholder={cart.notes}>
+//                    <input className="cartName" type="hidden" value={cart.name} />
+//                    <input type="hidden" name="_csrf" value={props.csrf} />
+//                    <input className="makeCartSubmit" type="submit" value="Update Cart" />
+//                </form>

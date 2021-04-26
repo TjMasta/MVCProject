@@ -1,6 +1,6 @@
 const models = require('../models');
 
-const Cart = models.Cart;
+const { Cart } = models;
 
 const makeCart = (req, res) => {
   if (!req.body.name) {
@@ -37,67 +37,49 @@ const makeCart = (req, res) => {
 
 const makerPage = (req, res) => {
   Cart.CartModel.findByOwner(req.session.account._id, (err, docs) => {
-      if(err) {
-          console.log(err);
-          return res.status(400).json({ error: 'An error ocurred' });
-      }
-      
-      return res.render('app', { csrfToken: req.csrfToken(), carts: docs });
+    if (err) {
+      console.log(err);
+      return res.status(400).json({ error: 'An error ocurred' });
+    }
+
+    return res.render('app', { csrfToken: req.csrfToken(), carts: docs });
   });
 };
 
 const getCarts = (request, response) => {
-    const req = request;
-    const res = response;
-    
-    return Cart.CartModel.findByOwner(req.session.account._id, (err, docs) => {
-        if(err) {
-            console.log(err);
-            return res.status(400).json({ error: 'An error occurred' });
-        }
-        console.log(docs[1].name);
-        return res.json({ carts: docs });
-    });
+  const req = request;
+  const res = response;
+
+  return Cart.CartModel.findByOwner(req.session.account._id, (err, docs) => {
+    if (err) {
+      console.log(err);
+      return res.status(400).json({ error: 'An error occurred' });
+    }
+    console.log(docs[1].name);
+    return res.json({ carts: docs });
+  });
 };
 
-const updateCarts = (request, response) =>
-{
-    const req = request;
-    const res = response;
-    
+const updateCarts = (request, response) => {
+  const req = request;
+  const res = response;
+
+  const cartToChange = Cart.CartModel.findByOwner(req.session.account._id, (err, docs) => {
     let tempCart;
-    Cart.CartModel.findByOwner(req.session.account._id, (err, docs) => {
-        if(err) {
-            console.log(err);
-            return res.status(400).json({ error: 'An error occurred' });
-        }
-        
-        for(let i = 0; i < docs.length; i++)
-        {
-            if(req.body.name === docs[i].name)
-                tempCart = docs[i];
-            else
-                return res.status(400).json({ error: 'An error occurred' });
-        }
-    });
+    if (err) {
+      console.log(err);
+      return res.status(400).json({ error: 'An error occurred' });
+    }
+
+    for (let i = 0; i < docs.length; i++) {
+      if (req.body.name === docs[i].name) tempCart = docs[i];
+      else return res.status(400).json({ error: 'An error occurred' });
+    }
+
+    return tempCart;
+  });
+  cartToChange.usage = req.body.usage;
 };
-//      Update form to figure out
-//                <form id="cartForm"
-//                    onSubmit={handleCart}
-//                    name="cartForm"
-//                    action="/maker"
-//                    method="POST"
-//                    className="cartForm"
-//                >
-//                    <input className="cartUsage" type="text" name="usage" placeholder={cart.usage}> 
-//                    <input className="cartWorking" type="text" name="working" placeholder={cart.working}>
-//                    <input className="cartUser" type="text" name="user" placeholder={cart.lastUser}>
-//                    <input className="cartRefuel" type="text" name="refuel" placeholder={cart.lastReFuel}>
-//                    <input className="cartNotes" type="text" name="notes" placeholder={cart.notes}>
-//                    <input className="cartName" type="hidden" value={cart.name} />
-//                    <input type="hidden" name="_csrf" value={props.csrf} />
-//                    <input className="makeCartSubmit" type="submit" value="Update Cart" />
-//                </form>
 
 module.exports.makerPage = makerPage;
 module.exports.getCarts = getCarts;

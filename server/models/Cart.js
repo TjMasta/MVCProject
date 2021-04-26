@@ -25,22 +25,22 @@ const CartSchema = new mongoose.Schema({
   },
 
   lastUser: {
-      type: String,
-      set: setLastUser,
+    type: String,
+    set: setLastUser,
   },
-  
+
   lastReFuel: {
-      type: String,
-      set: setLastReFuelDate,
+    type: String,
+    set: setLastReFuelDate,
   },
-    
+
   notes: {
-      type: String,
-      set: setNotes,
+    type: String,
+    set: setNotes,
   },
-    
+
   working: {
-      type: Boolean,
+    type: Boolean,
   },
 
   owner: {
