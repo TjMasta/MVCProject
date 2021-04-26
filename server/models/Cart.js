@@ -7,6 +7,9 @@ let CartModel = {};
 
 const convertId = mongoose.Types.ObjectId;
 const setName = (name) => _.escape(name).trim();
+const setLastUser = (user) => _.escape(user).trim();
+const setLastReFuelDate = (date) => _.escape(date).trim();
+const setNotes = (notes) => _.escape(notes).trim();
 
 const CartSchema = new mongoose.Schema({
   name: {
@@ -16,10 +19,28 @@ const CartSchema = new mongoose.Schema({
     set: setName,
   },
 
-  age: {
+  usage: {
     type: Number,
     min: 0,
-    required: true,
+  },
+
+  lastUser: {
+      type: String,
+      set: setLastUser,
+  },
+  
+  lastReFuel: {
+      type: String,
+      set: setLastReFuelDate,
+  },
+    
+  notes: {
+      type: String,
+      set: setNotes,
+  },
+    
+  working: {
+      type: Boolean,
   },
 
   owner: {

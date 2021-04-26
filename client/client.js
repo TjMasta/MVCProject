@@ -1,6 +1,7 @@
 const handleError = (message) => {
-  $("#errorMessage").text(message);
-  $("#cartMessage").animate({width:'toggle'},350);
+    console.log(message);
+//  $("#errorMessage").text(message);
+//  $("#cartMessage").animate({width:'toggle'},350);
 }
 
 const sendAjax = (action, data) => {
@@ -11,7 +12,7 @@ const sendAjax = (action, data) => {
     data: data,
     dataType: "json",
     success: (result, status, xhr) => {
-      $("#cartMessage").animate({width:'hide'},350);
+      //$("#cartMessage").animate({width:'hide'},350);
 
       window.location = result.redirect;
     },

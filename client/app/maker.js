@@ -3,7 +3,7 @@ const handleCart = (e) => {
     
     $("#cartMessage").animate({width: 'hide'}, 350);
     
-    if($("cartName").val() == '' || $("#cartAge").val() == '') {
+    if($("cartName").val() == '') {
         handleError("RAWR! All fields are required");
         return false;
     }
@@ -24,10 +24,8 @@ const CartForm = (props) => {
             method="POST"
             className="cartForm"
         >
-            <label htmlFor="name">Name: </label>
+            <label htmlFor="name">Name/Number: </label>
             <input id="cartName" type="text" name="name" placeholder="Cart Name"/>
-            <label htmlFor="age">Age: </label>
-            <input id="cartAge" type="text" name="age" placeholder="Cart Age"/>
             <input type="hidden" name="_csrf" value={props.csrf} />
             <input className="makeCartSubmit" type="submit" value="Make Cart" />
         </form>
@@ -48,7 +46,11 @@ const CartList = function(props) {
             <div key={cart._id} className="cart">
                 <img src="/assets/img/cartface.jpeg" alt="cart face" className="cartFace" />
                 <h3 className="cartName"> Name: {cart.name} </h3>
-                <h3 className="cartAge"> Age: {cart.age} </h3>
+                <h3 className="cartUsage"> Usage: {cart.usage} </h3>
+                <h3 className="lastUser"> Last User: {cart.lastUser} </h3>
+                <h3 className="lastReFuel"> Last Refuel: {cart.lastReFuel} </h3>
+                <h3 className="working"> Working: {cart.working} </h3>
+                <p className="notes"> Notes: {cart.notes} </p>
             </div>
         );
     });

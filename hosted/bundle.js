@@ -1,99 +1,100 @@
 "use strict";
 
-var handleDomo = function handleDomo(e) {
+var handleCart = function handleCart(e) {
   e.preventDefault();
-  $("#domoMessage").animate({
+  $("#cartMessage").animate({
     width: 'hide'
   }, 350);
 
-  if ($("domoName").val() == '' || $("#domoAge").val() == '') {
+  if ($("cartName").val() == '') {
     handleError("RAWR! All fields are required");
     return false;
   }
 
-  sendAjax('POST', $("#domoForm").attr("action"), $("#domoForm").serialize(), function () {
-    loadDomosFromServer();
+  sendAjax('POST', $("#cartForm").attr("action"), $("#cartForm").serialize(), function () {
+    loadCartsFromServer();
   });
   return false;
 };
 
-var DomoForm = function DomoForm(props) {
+var CartForm = function CartForm(props) {
   return /*#__PURE__*/React.createElement("form", {
-    id: "domoForm",
-    onSubmit: handleDomo,
-    name: "domoForm",
+    id: "cartForm",
+    onSubmit: handleCart,
+    name: "cartForm",
     action: "/maker",
     method: "POST",
-    className: "domoForm"
+    className: "cartForm"
   }, /*#__PURE__*/React.createElement("label", {
     htmlFor: "name"
-  }, "Name: "), /*#__PURE__*/React.createElement("input", {
-    id: "domoName",
+  }, "Name/Number: "), /*#__PURE__*/React.createElement("input", {
+    id: "cartName",
     type: "text",
     name: "name",
-    placeholder: "Domo Name"
-  }), /*#__PURE__*/React.createElement("label", {
-    htmlFor: "age"
-  }, "Age: "), /*#__PURE__*/React.createElement("input", {
-    id: "domoAge",
-    type: "text",
-    name: "age",
-    placeholder: "Domo Age"
+    placeholder: "Cart Name"
   }), /*#__PURE__*/React.createElement("input", {
     type: "hidden",
     name: "_csrf",
     value: props.csrf
   }), /*#__PURE__*/React.createElement("input", {
-    className: "makeDomoSubmit",
+    className: "makeCartSubmit",
     type: "submit",
-    value: "Make Domo"
+    value: "Make Cart"
   }));
 };
 
-var DomoList = function DomoList(props) {
-  if (props.domos.length === 0) {
+var CartList = function CartList(props) {
+  if (props.carts.length === 0) {
     return /*#__PURE__*/React.createElement("div", {
-      className: "domoList"
+      className: "cartList"
     }, /*#__PURE__*/React.createElement("h3", {
-      className: "emptyDomo"
-    }, "No Domos yet"));
+      className: "emptyCart"
+    }, "No Carts yet"));
   }
 
-  var domoNodes = props.domos.map(function (domo) {
+  var cartNodes = props.carts.map(function (cart) {
     return /*#__PURE__*/React.createElement("div", {
-      key: domo._id,
-      className: "domo"
+      key: cart._id,
+      className: "cart"
     }, /*#__PURE__*/React.createElement("img", {
-      src: "/assets/img/domoface.jpeg",
-      alt: "domo face",
-      className: "domoFace"
+      src: "/assets/img/cartface.jpeg",
+      alt: "cart face",
+      className: "cartFace"
     }), /*#__PURE__*/React.createElement("h3", {
-      className: "domoName"
-    }, " Name: ", domo.name, " "), /*#__PURE__*/React.createElement("h3", {
-      className: "domoAge"
-    }, " Age: ", domo.age, " "));
+      className: "cartName"
+    }, " Name: ", cart.name, " "), /*#__PURE__*/React.createElement("h3", {
+      className: "cartUsage"
+    }, " Usage: ", cart.usage, " "), /*#__PURE__*/React.createElement("h3", {
+      className: "lastUser"
+    }, " Last User: ", cart.lastUser, " "), /*#__PURE__*/React.createElement("h3", {
+      className: "lastReFuel"
+    }, " Last Refuel: ", cart.lastReFuel, " "), /*#__PURE__*/React.createElement("h3", {
+      className: "working"
+    }, " Working: ", cart.working, " "), /*#__PURE__*/React.createElement("p", {
+      className: "notes"
+    }, " Notes: ", cart.notes, " "));
   });
   return /*#__PURE__*/React.createElement("div", {
-    className: "domoList"
-  }, domoNodes);
+    className: "cartList"
+  }, cartNodes);
 };
 
-var loadDomosFromServer = function loadDomosFromServer() {
-  sendAjax('GET', '/getDomos', null, function (data) {
-    ReactDOM.render( /*#__PURE__*/React.createElement(DomoList, {
-      domos: data.domos
-    }), document.querySelector("#domos"));
+var loadCartsFromServer = function loadCartsFromServer() {
+  sendAjax('GET', '/getCarts', null, function (data) {
+    ReactDOM.render( /*#__PURE__*/React.createElement(CartList, {
+      carts: data.carts
+    }), document.querySelector("#carts"));
   });
 };
 
 var setup = function setup(csrf) {
-  ReactDOM.render( /*#__PURE__*/React.createElement(DomoForm, {
+  ReactDOM.render( /*#__PURE__*/React.createElement(CartForm, {
     csrf: csrf
-  }), document.querySelector("#makeDomo"));
-  ReactDOM.render( /*#__PURE__*/React.createElement(DomoForm, {
-    domos: []
-  }), document.querySelector("#domos"));
-  loadDomosFromServer();
+  }), document.querySelector("#makeCart"));
+  ReactDOM.render( /*#__PURE__*/React.createElement(CartForm, {
+    carts: []
+  }), document.querySelector("#carts"));
+  loadCartsFromServer();
 };
 
 var getToken = function getToken() {
@@ -108,14 +109,12 @@ $(document).ready(function () {
 "use strict";
 
 var handleError = function handleError(message) {
-  $("#errorMessage").text(message);
-  $("#domoMessage").animate({
-    width: 'toggle'
-  }, 350);
+  console.log(message); //    $("#errorMessage").text(message);
+  //    $("#cartMessage").animate({width: 'toggle'}, 350);
 };
 
 var redirect = function redirect(response) {
-  $("#domoMessage").animate({
+  $("#cartMessage").animate({
     width: 'hide'
   }, 350);
   window.location = response.redirect;
