@@ -4,16 +4,16 @@ const { Cart } = models;
 
 const makeCart = (req, res) => {
   if (!req.body.name) {
-    return res.status(400).json({ error: 'RAWR! Both name and age are required' });
+    return res.status(400).json({ error: 'Name required' });
   }
-
+    
   const cartData = {
     name: req.body.name,
-    usage: req.body.usage,
-    lastUser: req.body.lastUser,
-    lastReFuel: req.body.lastReFuel,
-    notes: req.body.notes,
-    working: req.body.notes,
+    usage: 0,
+    lastUser: 'N/A',
+    lastReFuel: 'N/A',
+    notes: 'none',
+    working: true,
     owner: req.session.account._id,
   };
 
@@ -55,8 +55,7 @@ const getCarts = (request, response) => {
       console.log(err);
       return res.status(400).json({ error: 'An error occurred' });
     }
-    console.log(docs[1].name);
-    return res.json({ carts: docs });
+    return res.json({ carts: docs, csrfToken: req.csrfToken(), });
   });
 };
 
@@ -64,21 +63,24 @@ const updateCarts = (request, response) => {
   const req = request;
   const res = response;
 
-  const cartToChange = Cart.CartModel.findByOwner(req.session.account._id, (err, docs) => {
-    let tempCart;
-    if (err) {
-      console.log(err);
-      return res.status(400).json({ error: 'An error occurred' });
-    }
-
-    for (let i = 0; i < docs.length; i++) {
-      if (req.body.name === docs[i].name) tempCart = docs[i];
-      else return res.status(400).json({ error: 'An error occurred' });
-    }
-
-    return tempCart;
+  const cartData = {
+    name: req.body.name,
+    usage: req.body.usage,
+    lastUser: req.body.lastUser,
+    lastReFuel: req.body.lastReFuel,
+    notes: req.body.notes,
+    working: req.body.working,
+    owner: req.session.account._id,
+  };
+    
+  Cart.CartModel.update(req.session.account._id, cartData);
+  //console.log(doc);
+  return Cart.CartModel.findByOwner(req.session.account._id, (err, docs) => {
+      console.log(docs);
+      return res.json({ message: "docs" });
   });
-  cartToChange.usage = req.body.usage;
+    
+    
 };
 
 module.exports.makerPage = makerPage;

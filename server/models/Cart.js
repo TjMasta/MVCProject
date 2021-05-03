@@ -57,7 +57,11 @@ const CartSchema = new mongoose.Schema({
 
 CartSchema.statics.toAPI = (doc) => ({
   name: doc.name,
-  age: doc.age,
+  usage: doc.usage,
+  lastUser: doc.lastUser,
+  lastReFuel: doc.lastReFuel,
+  notes: doc.notes,
+  working: doc.working,
 });
 
 CartSchema.statics.findByOwner = (ownerId, callback) => {
@@ -65,8 +69,16 @@ CartSchema.statics.findByOwner = (ownerId, callback) => {
     owner: convertId(ownerId),
   };
 
-  return CartModel.find(search).select('name age').lean().exec(callback);
+  return CartModel.find(search).select('name usage lastUser lastReFuel notes working').lean().exec(callback);
 };
+
+CartSchema.statics.update = (ownerId, newData, callback) => {
+  const search = {
+    owner: convertId(ownerId),
+  };
+    
+  return CartModel.findByIdAndUpdate(search, newData, {new: true});
+}
 
 CartModel = mongoose.model('Cart', CartSchema);
 

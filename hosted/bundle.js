@@ -7,11 +7,28 @@ var handleCart = function handleCart(e) {
   }, 350);
 
   if ($("cartName").val() == '') {
-    handleError("RAWR! All fields are required");
+    handleError("All fields are required");
     return false;
   }
 
   sendAjax('POST', $("#cartForm").attr("action"), $("#cartForm").serialize(), function () {
+    loadCartsFromServer();
+  });
+  return false;
+};
+
+var handleUpdate = function handleUpdate(e) {
+  e.preventDefault();
+  $("#cartMessage").animate({
+    width: 'hide'
+  }, 350);
+
+  if ($("cartName").val() == '') {
+    handleError("All fields are required");
+    return false;
+  }
+
+  sendAjax('POST', $("#updateCart").attr("action"), $("#updateCart").serialize(), function () {
     loadCartsFromServer();
   });
   return false;
@@ -52,37 +69,78 @@ var CartList = function CartList(props) {
     }, "No Carts yet"));
   }
 
+  console.log(props.csrf);
   var cartNodes = props.carts.map(function (cart) {
     return /*#__PURE__*/React.createElement("div", {
       key: cart._id,
       className: "cart"
-    }, /*#__PURE__*/React.createElement("img", {
-      src: "/assets/img/cartface.jpeg",
-      alt: "cart face",
-      className: "cartFace"
-    }), /*#__PURE__*/React.createElement("h3", {
+    }, /*#__PURE__*/React.createElement("form", {
+      id: "updateCart",
+      onSubmit: handleUpdate,
+      action: "/update",
+      method: "POST",
+      className: "cartUpdateForm"
+    }, /*#__PURE__*/React.createElement("h3", {
       className: "cartName"
-    }, " Name: ", cart.name, " "), /*#__PURE__*/React.createElement("h3", {
-      className: "cartUsage"
-    }, " Usage: ", cart.usage, " "), /*#__PURE__*/React.createElement("h3", {
-      className: "lastUser"
-    }, " Last User: ", cart.lastUser, " "), /*#__PURE__*/React.createElement("h3", {
-      className: "lastReFuel"
-    }, " Last Refuel: ", cart.lastReFuel, " "), /*#__PURE__*/React.createElement("h3", {
-      className: "working"
-    }, " Working: ", cart.working, " "), /*#__PURE__*/React.createElement("p", {
-      className: "notes"
-    }, " Notes: ", cart.notes, " "));
+    }, " Name: ", cart.name), /*#__PURE__*/React.createElement("label", {
+      htmlFor: "usage"
+    }, " Usage: "), /*#__PURE__*/React.createElement("input", {
+      id: "cartUpUsage",
+      type: "text",
+      name: "usage",
+      placeholder: cart.usage
+    }), /*#__PURE__*/React.createElement("label", {
+      htmlFor: "lastUser"
+    }, " Last User: "), /*#__PURE__*/React.createElement("input", {
+      id: "cartUpUser",
+      type: "text",
+      name: "user",
+      placeholder: cart.lastUser
+    }), /*#__PURE__*/React.createElement("label", {
+      htmlFor: "lastReFuel"
+    }, " Last Refuel: "), /*#__PURE__*/React.createElement("input", {
+      id: "cartUpFuel",
+      type: "text",
+      name: "lastReFuel",
+      placeholder: cart.lastReFuel
+    }), /*#__PURE__*/React.createElement("label", {
+      htmlFor: "working"
+    }, " Working: "), /*#__PURE__*/React.createElement("input", {
+      id: "cartUpWorking",
+      type: "checkbox",
+      name: "working",
+      value: cart.working
+    }), /*#__PURE__*/React.createElement("label", {
+      htmlFor: "notes"
+    }, " Notes: "), /*#__PURE__*/React.createElement("input", {
+      id: "cartUpNotes",
+      type: "text",
+      name: "notes",
+      placeholder: cart.notes
+    }), /*#__PURE__*/React.createElement("input", {
+      type: "hidden",
+      name: "name",
+      value: cart.name
+    }), /*#__PURE__*/React.createElement("input", {
+      type: "hidden",
+      name: "_csrf",
+      value: props.csrf
+    }), /*#__PURE__*/React.createElement("input", {
+      className: "updateCartSubmit",
+      type: "submit",
+      value: "Update Cart"
+    })));
   });
   return /*#__PURE__*/React.createElement("div", {
     className: "cartList"
   }, cartNodes);
 };
 
-var loadCartsFromServer = function loadCartsFromServer() {
+var loadCartsFromServer = function loadCartsFromServer(csrf) {
   sendAjax('GET', '/getCarts', null, function (data) {
     ReactDOM.render( /*#__PURE__*/React.createElement(CartList, {
-      carts: data.carts
+      carts: data.carts,
+      csrf: data.csrfToken
     }), document.querySelector("#carts"));
   });
 };
@@ -92,9 +150,10 @@ var setup = function setup(csrf) {
     csrf: csrf
   }), document.querySelector("#makeCart"));
   ReactDOM.render( /*#__PURE__*/React.createElement(CartForm, {
-    carts: []
+    carts: [],
+    csrf: csrf
   }), document.querySelector("#carts"));
-  loadCartsFromServer();
+  loadCartsFromServer(csrf);
 };
 
 var getToken = function getToken() {
