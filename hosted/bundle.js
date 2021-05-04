@@ -94,7 +94,7 @@ var CartList = function CartList(props) {
     }, " Last User: "), /*#__PURE__*/React.createElement("input", {
       id: "cartUpUser",
       type: "text",
-      name: "user",
+      name: "lastUser",
       placeholder: cart.lastUser
     }), /*#__PURE__*/React.createElement("label", {
       htmlFor: "lastReFuel"

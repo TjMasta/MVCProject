@@ -68,7 +68,7 @@ const CartList = function(props) {
                 <input id="cartUpUsage" type="text" name="usage" placeholder={cart.usage}/>
             
                 <label htmlFor="lastUser"> Last User: </label>
-                <input id="cartUpUser" type="text" name="user" placeholder={cart.lastUser}/>
+                <input id="cartUpUser" type="text" name="lastUser" placeholder={cart.lastUser}/>
             
                 <label htmlFor="lastReFuel"> Last Refuel: </label>
                 <input id="cartUpFuel" type="text" name="lastReFuel" placeholder={cart.lastReFuel}/>

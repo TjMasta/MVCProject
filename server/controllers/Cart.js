@@ -63,22 +63,20 @@ const updateCarts = (request, response) => {
   const req = request;
   const res = response;
 
+  console.log(req.body.lastUser);
+    
   const cartData = {
     name: req.body.name,
     usage: req.body.usage,
     lastUser: req.body.lastUser,
     lastReFuel: req.body.lastReFuel,
     notes: req.body.notes,
-    working: req.body.working,
+    //working: req.body.working,
     owner: req.session.account._id,
   };
     
-  Cart.CartModel.update(req.session.account._id, cartData);
-  //console.log(doc);
-  return Cart.CartModel.findByOwner(req.session.account._id, (err, docs) => {
-      console.log(docs);
-      return res.json({ message: "docs" });
-  });
+  const cartToChange = Cart.CartModel.update(req.session.account._id, cartData);
+  cartToChange.then((data) => console.log(data));
     
     
 };

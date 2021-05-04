@@ -72,13 +72,13 @@ CartSchema.statics.findByOwner = (ownerId, callback) => {
   return CartModel.find(search).select('name usage lastUser lastReFuel notes working').lean().exec(callback);
 };
 
-CartSchema.statics.update = (ownerId, newData, callback) => {
+ CartSchema.statics.update = (ownerId, cartData) => {
   const search = {
     owner: convertId(ownerId),
   };
-    
-  return CartModel.findByIdAndUpdate(search, newData, {new: true});
-}
+
+  return CartModel.findOneAndUpdate(search, cartData).select('name usage lastUser lastReFuel notes working').exec();
+ }
 
 CartModel = mongoose.model('Cart', CartSchema);
 
