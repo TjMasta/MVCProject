@@ -17,8 +17,9 @@ var handleCart = function handleCart(e) {
   return false;
 };
 
-var handleUpdate = function handleUpdate(e) {
+var handleUpdate = function handleUpdate(e, _id) {
   e.preventDefault();
+  console.log("#" + e.target.id.toString());
   $("#cartMessage").animate({
     width: 'hide'
   }, 350);
@@ -28,7 +29,7 @@ var handleUpdate = function handleUpdate(e) {
     return false;
   }
 
-  sendAjax('POST', $("#updateCart").attr("action"), $("#updateCart").serialize(), function () {
+  sendAjax('POST', $("#" + e.target.id.toString()).attr("action"), $("#" + e.target.id.toString()).serialize(), function () {
     loadCartsFromServer();
   });
   return false;
@@ -71,11 +72,12 @@ var CartList = function CartList(props) {
 
   console.log(props.csrf);
   var cartNodes = props.carts.map(function (cart) {
+    console.log(cart._id);
     return /*#__PURE__*/React.createElement("div", {
       key: cart._id,
       className: "cart"
     }, /*#__PURE__*/React.createElement("form", {
-      id: "updateCart",
+      id: cart._id,
       onSubmit: handleUpdate,
       action: "/update",
       method: "POST",
@@ -126,11 +128,37 @@ var CartList = function CartList(props) {
       name: "_csrf",
       value: props.csrf
     }), /*#__PURE__*/React.createElement("input", {
+      type: "hidden",
+      name: "_id",
+      value: cart._id
+    }), /*#__PURE__*/React.createElement("input", {
       className: "updateCartSubmit",
       type: "submit",
       value: "Update Cart"
     })));
-  });
+  }); //console.log(cartNodes[0].props.children.props.children[2].props.placeholder);
+  //    let tempArray = [];
+  //    while(cartNodes.length != 0)
+  //    {
+  //        let index = 0;
+  //        let lowest = cartNodes[index].props.children.props.children[2].props.placeholder;
+  //        let holder = cartNodes[index];
+  //        for(let j = 0; j < cartNodes.length; j++)
+  //        {
+  //            if(lowest > cartNodes[j].props.children.props.children[2].props.placeholder)
+  //            {
+  //                lowest = cartNodes[j].props.children.props.children[2].props.placeholder
+  //                holder = cartNodes[j];
+  //                index = j;
+  //            }
+  //        }
+  //        cartNodes.splice(index, 1);
+  //        tempArray.push(holder);
+  //    }
+  //    
+  //    cartNodes = tempArray;
+  //    console.log(cartNodes);
+
   return /*#__PURE__*/React.createElement("div", {
     className: "cartList"
   }, cartNodes);

@@ -15,9 +15,9 @@ const handleCart = (e) => {
     return false;
 };
 
-const handleUpdate = (e) => {
+const handleUpdate = (e, _id) => {
     e.preventDefault();
-    
+    console.log("#" + e.target.id.toString());
     $("#cartMessage").animate({width: 'hide'}, 350);
     
     if($("cartName").val() == '') {
@@ -25,7 +25,7 @@ const handleUpdate = (e) => {
         return false;
     }
     
-    sendAjax('POST', $("#updateCart").attr("action"), $("#updateCart").serialize(), function() {
+    sendAjax('POST', $("#" + e.target.id.toString()).attr("action"), $("#" + e.target.id.toString()).serialize(), function() {
         loadCartsFromServer();
     });
         
@@ -58,10 +58,11 @@ const CartList = function(props) {
         );
     }
     console.log(props.csrf);
-    const cartNodes = props.carts.map(function(cart) {
+    let cartNodes = props.carts.map(function(cart) {
+        console.log(cart._id);
         return (
             <div key={cart._id} className="cart">
-                <form id="updateCart" onSubmit={handleUpdate} action="/update" method="POST" className="cartUpdateForm">
+                <form id={cart._id} onSubmit={handleUpdate} action="/update" method="POST" className="cartUpdateForm">
                 <h3 className="cartName"> Name: {cart.name}</h3>
             
                 <label htmlFor="usage"> Usage: </label>
@@ -81,11 +82,34 @@ const CartList = function(props) {
             
                 <input type="hidden" name="name" value={cart.name} />
                 <input type="hidden" name="_csrf" value={props.csrf} />
+                <input type="hidden" name="_id" value={cart._id} />
                 <input className="updateCartSubmit" type="submit" value="Update Cart" />
                 </form>
             </div>
         );
     });
+    //console.log(cartNodes[0].props.children.props.children[2].props.placeholder);
+//    let tempArray = [];
+//    while(cartNodes.length != 0)
+//    {
+//        let index = 0;
+//        let lowest = cartNodes[index].props.children.props.children[2].props.placeholder;
+//        let holder = cartNodes[index];
+//        for(let j = 0; j < cartNodes.length; j++)
+//        {
+//            if(lowest > cartNodes[j].props.children.props.children[2].props.placeholder)
+//            {
+//                lowest = cartNodes[j].props.children.props.children[2].props.placeholder
+//                holder = cartNodes[j];
+//                index = j;
+//            }
+//        }
+//        cartNodes.splice(index, 1);
+//        tempArray.push(holder);
+//    }
+//    
+//    cartNodes = tempArray;
+//    console.log(cartNodes);
     
     return (
         <div className="cartList">
