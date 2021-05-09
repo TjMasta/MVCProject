@@ -5,9 +5,6 @@ var showWorking = true;
 
 var handleCart = function handleCart(e) {
   e.preventDefault();
-  $("#cartMessage").animate({
-    width: 'hide'
-  }, 350);
 
   if ($("cartName").val() == '') {
     handleError("All fields are required");
@@ -18,13 +15,11 @@ var handleCart = function handleCart(e) {
     loadCartsFromServer();
   });
   return false;
-};
+}; // Handles the update form and makes the value equal to the placeholder value if nothing was input
+
 
 var handleUpdate = function handleUpdate(e) {
   e.preventDefault();
-  $("#cartMessage").animate({
-    width: 'hide'
-  }, 350);
   if ($("usage").val() == undefined) e.target[0].value = e.target[0].placeholder;
   if ($("lastUser").val() == undefined) e.target[1].value = e.target[1].placeholder;
   if ($("lastReFuel").val() == undefined) e.target[2].value = e.target[2].placeholder;
@@ -33,6 +28,56 @@ var handleUpdate = function handleUpdate(e) {
     loadCartsFromServer();
   });
   return false;
+};
+
+var handlePassChange = function handlePassChange(e) {
+  e.preventDefault();
+
+  if ($("#user").val() == '' || $("#password").val() == '' || $("#newPassword").val() == '') {
+    handleError("All fields must be filled in.");
+    return false;
+  }
+
+  sendAjax('POST', $("#ChangePassForm").attr("action"), $("#ChangePassForm").serialize());
+  return false;
+};
+
+var ChangePassForm = function ChangePassForm(props) {
+  console.log(props.csrf);
+  return /*#__PURE__*/React.createElement("form", {
+    id: "ChangePassForm",
+    onSubmit: handlePassChange,
+    name: "ChangePassForm",
+    action: "/changePass",
+    method: "POST",
+    className: "ChangePassForm"
+  }, /*#__PURE__*/React.createElement("label", {
+    htmlFor: "username"
+  }, "Username: "), /*#__PURE__*/React.createElement("input", {
+    id: "username",
+    type: "text",
+    name: "username"
+  }), /*#__PURE__*/React.createElement("label", {
+    htmlFor: "password"
+  }, "Password: "), /*#__PURE__*/React.createElement("input", {
+    id: "password",
+    type: "text",
+    name: "password"
+  }), /*#__PURE__*/React.createElement("label", {
+    htmlFor: "newPassword"
+  }, "New Password: "), /*#__PURE__*/React.createElement("input", {
+    id: "newPassword",
+    type: "text",
+    name: "newPassword"
+  }), /*#__PURE__*/React.createElement("input", {
+    type: "hidden",
+    name: "_csrf",
+    value: props.csrf
+  }), /*#__PURE__*/React.createElement("input", {
+    className: "changePassSubmit",
+    type: "submit",
+    value: "Change Password"
+  }));
 };
 
 var CartForm = function CartForm(props) {
@@ -45,7 +90,7 @@ var CartForm = function CartForm(props) {
     className: "cartForm"
   }, /*#__PURE__*/React.createElement("label", {
     htmlFor: "name"
-  }, "Name/Number: "), /*#__PURE__*/React.createElement("input", {
+  }, "Number: "), /*#__PURE__*/React.createElement("input", {
     id: "cartName",
     type: "text",
     name: "name",
@@ -59,7 +104,8 @@ var CartForm = function CartForm(props) {
     type: "submit",
     value: "Make Cart"
   }));
-};
+}; // Handles showing the list of carts and handles how the user sorts them
+
 
 var CartList = function CartList(props) {
   var sortUsage;
@@ -73,7 +119,8 @@ var CartList = function CartList(props) {
     }, /*#__PURE__*/React.createElement("h3", {
       className: "emptyCart"
     }, "No Carts yet"));
-  }
+  } // Makes 2 different forms depening on if the cart is working
+
 
   var cartNodes = props.carts.map(function (cart) {
     if (cart.working) {
@@ -88,7 +135,7 @@ var CartList = function CartList(props) {
         className: "cartUpdateForm"
       }, /*#__PURE__*/React.createElement("h3", {
         id: "cartName"
-      }, " Name: ", cart.name), /*#__PURE__*/React.createElement("label", {
+      }, " Cart# ", cart.name), /*#__PURE__*/React.createElement("label", {
         htmlFor: "usage"
       }, " Usage: "), /*#__PURE__*/React.createElement("input", {
         id: "cartUpUsage",
@@ -155,7 +202,7 @@ var CartList = function CartList(props) {
         className: "cartUpdateForm"
       }, /*#__PURE__*/React.createElement("h3", {
         id: "cartName"
-      }, " Name: ", cart.name), /*#__PURE__*/React.createElement("label", {
+      }, " Cart# ", cart.name), /*#__PURE__*/React.createElement("label", {
         htmlFor: "usage"
       }, " Usage: "), /*#__PURE__*/React.createElement("input", {
         id: "cartUpUsage",
@@ -210,7 +257,7 @@ var CartList = function CartList(props) {
         value: "Update Cart"
       })));
     }
-  });
+  }); // Sorts the carts on usage on ascending and descending order
 
   if (sortUsage == 1) {
     var tempArray = [];
@@ -256,7 +303,8 @@ var CartList = function CartList(props) {
 
     cartNodes = _tempArray;
     console.log(cartNodes);
-  }
+  } // Hides carts that aren't working
+
 
   if (showWorking != true) {
     console.log("here");
@@ -268,13 +316,15 @@ var CartList = function CartList(props) {
         cartNodes.splice(i, 1);
       }
     }
-  }
+  } // Toggles how the carts are sorted
+
 
   var buttonSortUsage = function buttonSortUsage() {
     sortUsage++;
     if (sortUsage > 2) sortUsage = 0;
     loadCartsFromServer(props.csrf, sortUsage, showWorking);
-  };
+  }; // Toggles if it shows the working carts or not
+
 
   var flipWorking = function flipWorking() {
     showWorking = !showWorking;
@@ -315,6 +365,9 @@ var setup = function setup(csrf) {
     csrf: csrf
   }), document.querySelector("#carts"));
   loadCartsFromServer(csrf);
+  ReactDOM.render( /*#__PURE__*/React.createElement(ChangePassForm, {
+    csrf: csrf
+  }), document.querySelector("#ChangePassForm"));
 };
 
 var getToken = function getToken() {
@@ -329,8 +382,8 @@ $(document).ready(function () {
 "use strict";
 
 var handleError = function handleError(message) {
-  console.log(message); //    $("#errorMessage").text(message);
-  //    $("#cartMessage").animate({width: 'toggle'}, 350);
+  console.log(message);
+  $("#errorMessage").text(message);
 };
 
 var redirect = function redirect(response) {

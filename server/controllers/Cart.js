@@ -18,7 +18,7 @@ const makeCart = (req, res) => {
   if (!req.body.name) {
     return res.status(400).json({ error: 'Name required' });
   }
-    
+
   const cartData = {
     name: req.body.name,
     usage: 0,
@@ -67,23 +67,20 @@ const getCarts = (request, response) => {
       console.log(err);
       return res.status(400).json({ error: 'An error occurred' });
     }
-    return res.json({ carts: docs, csrfToken: req.csrfToken(), });
+    return res.json({ carts: docs, csrfToken: req.csrfToken() });
   });
 };
 
+// Updates the cart and puts in default data if the user hasn't submitted anything
 const updateCarts = (request, response) => {
   const req = request;
   const res = response;
-    
-  if(req.body.usage === '')
-      req.body.usage = 0;
-  if(req.body.lastUser === '')
-      req.body.lastUser = 'N/A';
-  if(req.body.lastReFuel === '')
-      req.body.lastReFuel = 'N/A';
-  if(req.body.notes === '')
-      req.body.notes = 'none';
-    
+
+  if (req.body.usage === '') { req.body.usage = 0; }
+  if (req.body.lastUser === '') { req.body.lastUser = 'N/A'; }
+  if (req.body.lastReFuel === '') { req.body.lastReFuel = 'N/A'; }
+  if (req.body.notes === '') { req.body.notes = 'none'; }
+
   const cartData = {
     _id: req.body._id,
     name: req.body.name,
@@ -94,35 +91,26 @@ const updateCarts = (request, response) => {
     working: req.body.working,
     owner: req.session.account._id,
   };
-    console.log(cartData);
-    
 
-    
   return Cart.CartModel.update(req.session.account._id, (err, docs) => {
     if (err) {
       console.log(err);
       return res.status(400).json({ error: 'An error occurred' });
     }
-    for(let i = 0; i < docs.length; i++)
-      {
-          //console.log(cartData._id.toString());
-          if(cartData._id.toString() === docs[i]._id.toString())
-          {
-              tempCart = docs[i];
-              tempCart.usage = cartData.usage;
-              tempCart.lastUser = cartData.lastUser;
-              tempCart.lastReFuel = cartData.lastReFuel;
-              tempCart.notes = cartData.notes;
-              tempCart.working = cartData.working;
-              tempCart.save();
-              break;
-          }
+    for (let i = 0; i < docs.length; i++) {
+      if (cartData._id.toString() === docs[i]._id.toString()) {
+        tempCart = docs[i];
+        tempCart.usage = cartData.usage;
+        tempCart.lastUser = cartData.lastUser;
+        tempCart.lastReFuel = cartData.lastReFuel;
+        tempCart.notes = cartData.notes;
+        tempCart.working = cartData.working;
+        tempCart.save();
+        break;
       }
-    return res.json({ carts: docs, csrfToken: req.csrfToken(), });
+    }
+    return res.json({ carts: docs, csrfToken: req.csrfToken() });
   });
-  //cartToChange.then((data) => console.log(data));
-    
-    
 };
 
 module.exports.makerPage = makerPage;

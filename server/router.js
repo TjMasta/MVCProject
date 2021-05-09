@@ -11,6 +11,7 @@ const router = (app) => {
   app.get('/maker', mid.requiresLogin, controllers.Cart.makerPage);
   app.post('/maker', mid.requiresLogin, controllers.Cart.make);
   app.post('/update', mid.requiresLogin, controllers.Cart.update);
+  app.post('/changePass', mid.requiresLogin, controllers.Account.updatePass);
   app.get('/', mid.requiresSecure, mid.requiresLogout, controllers.Account.loginPage);
 };
 

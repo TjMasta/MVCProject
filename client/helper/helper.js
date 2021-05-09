@@ -1,7 +1,6 @@
 const handleError = (message) => {
     console.log(message);
-//    $("#errorMessage").text(message);
-//    $("#cartMessage").animate({width: 'toggle'}, 350);
+    $("#errorMessage").text(message);
 };
 
 const redirect = (response) => {

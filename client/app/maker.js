@@ -4,8 +4,6 @@ let showWorking = true;
 const handleCart = (e) => {
     e.preventDefault();
     
-    $("#cartMessage").animate({width: 'hide'}, 350);
-    
     if($("cartName").val() == '') {
         handleError("All fields are required");
         return false;
@@ -18,9 +16,9 @@ const handleCart = (e) => {
     return false;
 };
 
+// Handles the update form and makes the value equal to the placeholder value if nothing was input
 const handleUpdate = (e) => {
     e.preventDefault();
-    $("#cartMessage").animate({width: 'hide'}, 350);
     
     if($("usage").val() == undefined)
         e.target[0].value = e.target[0].placeholder;
@@ -38,6 +36,40 @@ const handleUpdate = (e) => {
     return false;
 };
 
+const handlePassChange = (e) => {
+    e.preventDefault();
+    
+    if($("#user").val() == '' || $("#password").val() == '' || $("#newPassword").val() == '') {
+        handleError("All fields must be filled in.");
+        return false;
+    }
+    
+    sendAjax('POST', $("#ChangePassForm").attr("action"), $("#ChangePassForm").serialize());
+    return false;
+};
+
+const ChangePassForm = (props) => {
+    console.log(props.csrf);
+    return (
+        <form id="ChangePassForm"
+            onSubmit={handlePassChange}
+            name="ChangePassForm"
+            action="/changePass"
+            method="POST"
+            className="ChangePassForm"
+        >
+            <label htmlFor="username">Username: </label>
+            <input id="username" type="text" name="username" />
+            <label htmlFor="password">Password: </label>
+            <input id="password" type="text" name="password" />
+            <label htmlFor="newPassword">New Password: </label>
+            <input id="newPassword" type="text" name="newPassword" />
+            <input type="hidden" name="_csrf" value={props.csrf} />
+            <input className="changePassSubmit" type="submit" value="Change Password" />
+        </form>
+    );
+};
+
 const CartForm = (props) => {
     return (
         <form id="cartForm"
@@ -47,7 +79,7 @@ const CartForm = (props) => {
             method="POST"
             className="cartForm"
         >
-            <label htmlFor="name">Name/Number: </label>
+            <label htmlFor="name">Number: </label>
             <input id="cartName" type="text" name="name" placeholder="Cart Name"/>
             <input type="hidden" name="_csrf" value={props.csrf} />
             <input className="makeCartSubmit" type="submit" value="Make Cart" />
@@ -55,6 +87,7 @@ const CartForm = (props) => {
     );
 };
 
+// Handles showing the list of carts and handles how the user sorts them
 const CartList = function(props) {
     let sortUsage;
     let showWorking;
@@ -63,6 +96,7 @@ const CartList = function(props) {
         sortUsage = 0;
     else
         sortUsage = props.sortUsage;
+    
     if(props.showWorking === undefined)
         showWorking = true;
     else
@@ -77,13 +111,14 @@ const CartList = function(props) {
         );
     }
     
+    // Makes 2 different forms depening on if the cart is working
     let cartNodes = props.carts.map(function(cart) {
         if(cart.working)
         {
             return (
                 <div key={cart._id} className="cart">
                     <form id={cart._id} onSubmit={handleUpdate} action="/update" method="POST" className="cartUpdateForm">
-                    <h3 id="cartName"> Name: {cart.name}</h3>
+                    <h3 id="cartName"> Cart# {cart.name}</h3>
 
                     <label htmlFor="usage"> Usage: </label>
                     <input id="cartUpUsage" type="text" name="usage" placeholder={cart.usage}/>
@@ -117,7 +152,7 @@ const CartList = function(props) {
             return (
                 <div key={cart._id} className="cart">
                     <form id={cart._id} onSubmit={handleUpdate} action="/update" method="POST" className="cartUpdateForm">
-                    <h3 id="cartName"> Name: {cart.name}</h3>
+                    <h3 id="cartName"> Cart# {cart.name}</h3>
 
                     <label htmlFor="usage"> Usage: </label>
                     <input id="cartUpUsage" type="text" name="usage" placeholder={cart.usage}/>
@@ -148,6 +183,8 @@ const CartList = function(props) {
         }
         
     });
+    
+    // Sorts the carts on usage on ascending and descending order
     if(sortUsage == 1)
     {
         let tempArray = [];
@@ -196,6 +233,7 @@ const CartList = function(props) {
         console.log(cartNodes);
     }
     
+    // Hides carts that aren't working
     if(showWorking != true)
     {
         console.log("here");
@@ -209,7 +247,7 @@ const CartList = function(props) {
         }
     }
     
-    
+    // Toggles how the carts are sorted
     const buttonSortUsage = function() {    
         sortUsage++;
         if(sortUsage > 2)
@@ -218,6 +256,7 @@ const CartList = function(props) {
         loadCartsFromServer(props.csrf, sortUsage, showWorking);
     };
 
+    // Toggles if it shows the working carts or not
     const flipWorking = function() {
         showWorking = !showWorking;
         console.log(showWorking);
@@ -251,6 +290,10 @@ const setup = function(csrf) {
     );
     
     loadCartsFromServer(csrf);
+    
+    ReactDOM.render(
+        <ChangePassForm csrf={csrf} />, document.querySelector("#ChangePassForm")
+    );
 };
 
 const getToken = () => {

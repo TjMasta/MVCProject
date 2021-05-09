@@ -4,6 +4,7 @@ html, body {
     margin: 0;
     padding: 0;
     overflow-x: hidden;
+    font-family: sans-serif;
 }
 
 #logo {
@@ -50,7 +51,7 @@ nav:nth-child(1) {
 .cartForm {
     border: 2px solid #338acc;
     height: 35px;
-    width: 700px;
+    width: 20%;
     margin-top:0px;
     padding-top:10px;
     background-color: #55acee;
@@ -190,7 +191,7 @@ nav:nth-child(1) {
 }
 
 #carts {
-    width: 40%;
+    width: 50%;
     min-width: 400px;
     border: 2px solid #55acee;
     border-radius: 4px;
@@ -209,6 +210,8 @@ nav:nth-child(1) {
     padding: 10px;
     min-height:60px;
     overflow: hidden;
+    
+    text-align: center;
 }
 
 .cart:hover {
@@ -259,4 +262,10 @@ h3.cartAge {
 
 .cart:last-child {
     margin-bottom:10px;
+}
+
+#ChangePassForm {
+    float: right;
+    width: 30%;
+    padding-right: 5%;
 }

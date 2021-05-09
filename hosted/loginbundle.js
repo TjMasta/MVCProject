@@ -149,8 +149,8 @@ $(document).ready(function () {
 "use strict";
 
 var handleError = function handleError(message) {
-  console.log(message); //    $("#errorMessage").text(message);
-  //    $("#cartMessage").animate({width: 'toggle'}, 350);
+  console.log(message);
+  $("#errorMessage").text(message);
 };
 
 var redirect = function redirect(response) {

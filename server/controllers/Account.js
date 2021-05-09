@@ -76,6 +76,20 @@ const signup = (request, response) => {
   });
 };
 
+const updatePass = (request, response) => {
+    const req = request;
+    const res = response;
+    
+    return Account.AccountModel.find(req.body.account._id, (err, docs) => {
+    if (err) {
+      console.log(err);
+      return res.status(400).json({ error: 'An error occurred' });
+    }
+        console.log(docs);
+    return res.json({ });
+  });
+}
+
 const getToken = (request, response) => {
   const req = request;
   const res = response;
@@ -92,3 +106,4 @@ module.exports.login = login;
 module.exports.logout = logout;
 module.exports.signup = signup;
 module.exports.getToken = getToken;
+module.exports.updatePass = updatePass;
