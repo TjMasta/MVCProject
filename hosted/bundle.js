@@ -20,10 +20,10 @@ var handleCart = function handleCart(e) {
 
 var handleUpdate = function handleUpdate(e) {
   e.preventDefault();
-  if ($("usage").val() == undefined) e.target[0].value = e.target[0].placeholder;
-  if ($("lastUser").val() == undefined) e.target[1].value = e.target[1].placeholder;
-  if ($("lastReFuel").val() == undefined) e.target[2].value = e.target[2].placeholder;
-  if ($("notes").val() == undefined) e.target[4].value = e.target[4].placeholder;
+  if ($("#cartUpUsage").val() === undefined) e.target[0].value = e.target[0].placeholder;
+  if ($("#cartUpUser").val() === undefined) e.target[1].value = e.target[1].placeholder;
+  if ($("#cartUpFuel").val() === undefined) e.target[2].value = e.target[2].placeholder;
+  if ($("#cartUpNotes").val() === undefined) e.target[4].value = e.target[4].placeholder;
   sendAjax('POST', $("#" + e.target.id.toString()).attr("action"), $("#" + e.target.id.toString()).serialize(), function () {
     loadCartsFromServer();
   });
@@ -43,7 +43,6 @@ var handlePassChange = function handlePassChange(e) {
 };
 
 var ChangePassForm = function ChangePassForm(props) {
-  console.log(props.csrf);
   return /*#__PURE__*/React.createElement("form", {
     id: "ChangePassForm",
     onSubmit: handlePassChange,

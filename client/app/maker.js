@@ -19,14 +19,14 @@ const handleCart = (e) => {
 // Handles the update form and makes the value equal to the placeholder value if nothing was input
 const handleUpdate = (e) => {
     e.preventDefault();
-    
-    if($("usage").val() == undefined)
+        
+    if($("#cartUpUsage").val() === undefined)
         e.target[0].value = e.target[0].placeholder;
-    if($("lastUser").val() == undefined)
+    if($("#cartUpUser").val() === undefined)
         e.target[1].value = e.target[1].placeholder;
-    if($("lastReFuel").val() == undefined)
+    if($("#cartUpFuel").val() === undefined)
         e.target[2].value = e.target[2].placeholder;
-    if($("notes").val() == undefined)
+    if($("#cartUpNotes").val() === undefined)
         e.target[4].value = e.target[4].placeholder;
         
     sendAjax('POST', $("#" + e.target.id.toString()).attr("action"), $("#" + e.target.id.toString()).serialize(), function() {
@@ -49,7 +49,6 @@ const handlePassChange = (e) => {
 };
 
 const ChangePassForm = (props) => {
-    console.log(props.csrf);
     return (
         <form id="ChangePassForm"
             onSubmit={handlePassChange}
